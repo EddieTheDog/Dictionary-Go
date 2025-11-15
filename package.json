@@ -1,7 +1,7 @@
 {
   "name": "dictionary-go",
   "version": "1.0.0",
-  "description": "Smart dictionary PWA with playlists and admin console",
+  "description": "Smart dictionary PWA with playlists, admin console, and premade announcements",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
