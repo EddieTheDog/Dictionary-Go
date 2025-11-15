@@ -1,6 +1,7 @@
 const searchBtn = document.getElementById('searchBtn');
 const searchInput = document.getElementById('search');
 const resultsDiv = document.getElementById('results');
+const announcementBanner = document.getElementById('announcementBanner');
 
 const playlists = {};
 
@@ -8,7 +9,6 @@ searchBtn.addEventListener('click', async () => {
     const word = searchInput.value.trim();
     if(!word) return;
 
-    // Placeholder definition
     const definition = `Definition of ${word}`;
 
     resultsDiv.innerHTML = `
@@ -16,6 +16,8 @@ searchBtn.addEventListener('click', async () => {
         <p>${definition}</p>
         <button onclick="addToPlaylist('${word}')">Add to Playlist</button>
     `;
+
+    showBanner(`Searched for "${word}"`);
 });
 
 function addToPlaylist(word) {
@@ -25,36 +27,48 @@ function addToPlaylist(word) {
     if(!playlists[playlistName]) playlists[playlistName] = [];
     playlists[playlistName].push(word);
 
-    alert(`${word} added to ${playlistName}`);
+    showBanner(`Added "${word}" to playlist "${playlistName}"`);
 }
 
-// Poll admin commands
+// Banner display function
+function showBanner(message) {
+    announcementBanner.textContent = message;
+    announcementBanner.classList.remove('hidden');
+
+    setTimeout(() => {
+        announcementBanner.classList.add('hidden');
+    }, 5000);
+}
+
+// Poll admin commands including premade announcements
 async function checkAdminCommands() {
     const res = await fetch('/admin/commands');
     const data = await res.json();
 
-    if (data.clearCookies) {
+    if(data.clearCookies) {
         localStorage.clear();
         sessionStorage.clear();
         document.cookie.split(";").forEach(c => {
             document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
         });
+        showBanner("All user data cleared by admin.");
         location.reload();
     }
 
-    if (data.forceReload) {
+    if(data.forceReload) {
+        showBanner("Admin forced reload.");
         location.reload();
     }
 
-    if (data.announcement) {
-        alert("Announcement:\n\n" + data.announcement);
+    if(data.announcement) {
+        showBanner(data.announcement);
     }
 }
 
-setInterval(checkAdminCommands, 10000);
+setInterval(checkAdminCommands, 5000);
 
 // Register Service Worker
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/service-worker.js')
-    .then(() => console.log('Service Worker registered'));
+        .then(() => console.log('Service Worker registered'));
 }
