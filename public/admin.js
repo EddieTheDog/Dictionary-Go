@@ -1,6 +1,6 @@
 async function sendAnnouncement() {
     const msg = document.getElementById("announcementText").value.trim();
-    if (!msg) return alert("Write something first.");
+    if(!msg) return alert("Write something first.");
 
     await fetch('/admin/send-announcement', {
         method: 'POST',
@@ -8,15 +8,23 @@ async function sendAnnouncement() {
         body: JSON.stringify({ message: msg })
     });
 
-    alert("Announcement sent!");
+    showBanner(`Announcement sent: "${msg}"`);
 }
 
 async function clearUserCookies() {
     await fetch('/admin/clear-cookies', { method: 'POST' });
-    alert("All users will reset on next load.");
+    showBanner("All users will reset on next load.");
 }
 
 async function forceReload() {
     await fetch('/admin/force-reload', { method: 'POST' });
-    alert("Clients will reload.");
+    showBanner("Clients will reload.");
+}
+
+// Local banner function
+function showBanner(message) {
+    const banner = document.getElementById('announcementBanner');
+    banner.textContent = message;
+    banner.classList.remove('hidden');
+    setTimeout(() => banner.classList.add('hidden'), 5000);
 }
