@@ -1,0 +1,19 @@
+{
+  "name": "dictionary-go",
+  "version": "1.0.0",
+  "description": "Smart dictionary PWA with playlists and admin console",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "keywords": ["dictionary", "PWA", "playlist", "iOS", "admin"],
+  "author": "DR",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
